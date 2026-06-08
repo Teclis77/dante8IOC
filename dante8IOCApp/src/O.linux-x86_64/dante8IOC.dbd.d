@@ -79,6 +79,7 @@
     /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/sseqRecord.dbd \
     /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/swaitRecord.dbd \
     /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/editSseq.dbd \
+    ../sncdante8IOC.dbd \
     /home/xlabsrv2/epics/dbd/PVAServerRegister.dbd \
     /home/xlabsrv2/epics/dbd/PVACommonRegister.dbd \
     /home/xlabsrv2/epics/dbd/qsrv.dbd
@@ -164,6 +165,7 @@
 /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/sseqRecord.dbd:
 /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/swaitRecord.dbd:
 /home/xlabsrv2/epics/synApps_6_3/support/calc-R3-7-5/dbd/editSseq.dbd:
+../sncdante8IOC.dbd:
 /home/xlabsrv2/epics/dbd/PVAServerRegister.dbd:
 /home/xlabsrv2/epics/dbd/PVACommonRegister.dbd:
 /home/xlabsrv2/epics/dbd/qsrv.dbd:

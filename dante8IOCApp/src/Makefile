@@ -42,6 +42,18 @@ dante8IOC_SRCS_vxWorks += -nil-
 # Add support from base/src/vxWorks if needed
 #dante8IOC_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
+# To build SNL programs, SNCSEQ must be defined
+# in the <top>/configure/RELEASE file
+ifneq ($(SNCSEQ),)
+	# Build sncExample into myexampleSupport
+	dante8IOC_SNCFLAGS += +r
+	dante8IOC_DBD += sncdante8IOC.dbd
+	# A .stt sequence program is *not* pre-processed:
+	dante8IOC_SRCS += sncdante8IOC.stt
+	dante8IOC_LIBS += seq pv
+endif
+
+
 # Link QSRV (pvAccess Server) if available
 ifdef EPICS_QSRV_MAJOR_VERSION
 	dante8IOC_LIBS += qsrv

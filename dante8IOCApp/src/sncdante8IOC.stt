@@ -1,0 +1,131 @@
+//#################################################
+//# ###                                       ### #
+//# ### Epics SNL Routines for		      ### #
+//# ### Save data in external file	      ### #
+//# ###                                       ### #
+//# ### author: D. Hampai - M. Montis         ### #
+//# ###                                       ### #
+//# ### Ref 1.0; 2026-07-05                   ### #
+//#################################################
+//#
+//
+program sncdante8IOC
+
+%{
+#include <math.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <errno.h>
+
+
+static FILE *general_path_save_file;
+
+}%
+
+// Parameters
+
+//	Save Path File
+string output_path;
+assign output_path to "{user}:scan:filepath";
+monitor output_path;
+
+char name_server[40];
+
+int detector_type;
+assign detector_type to "{user}_{card}_{axis}:type";
+monitor detector_type;
+
+string name_file;
+assign name_file to "{user}_{card}_{axis}:dataout";
+monitor name_file;
+
+int num_export;
+assign num_export to "{user}_{card}_{axis}:status";
+monitor num_export;
+
+int nord_data;
+assign nord_data to "{user}_{card}_{axis}:data.NORD";
+monitor nord_data;
+
+//
+// SONO ARRIVATO CHE DEFINISCO IL NUMERO DEI VALORI IN DATAOUT
+//
+
+int data[100];
+assign data to "{user}_{card}_{axis}:data";
+monitor data;
+//
+
+string temp_string;
+char full_save_path[120];
+char full_save_file[180];
+int k;
+//
+//
+//
+ss save_data {
+	state init {
+		when () {
+
+		} state idle
+	}
+//	
+//	Principal Cicle
+//
+	state idle {
+		when (num_export==1) {
+
+		} state prep
+	}
+//
+//	Acquiring Name File
+//
+	state prep {
+		when() {
+			printf("Prepare file\n");
+			strcpy(name_server, macValueGet("server"));
+//			sprintf(name_server, "%s", server);
+			printf("Server: %s\n", name_server);
+			sprintf(full_save_path, "/home/%s/%s", name_server, output_path);
+			printf("path to save: %s\n", full_save_path);
+		} state generate_file
+	}
+//
+//	generate file from the name obtained with scan
+//
+	state generate_file {
+		when() {
+			printf("Generate file\n");
+			pvGet(name_file,SYNC);
+			sprintf(full_save_file, "%s/%s", full_save_path, name_file);
+			printf("File Out: %s\n",name_file);
+			printf("File to Save: %s\n",full_save_file);
+		} state export_data
+	}
+//
+//	export data
+//
+	state export_data {
+		when() {
+			printf("Export Data file\n");
+			general_path_save_file = fopen(full_save_file, "w");
+//
+			if (general_path_save_file == NULL) {
+				printf("Scan: ERROR - Cannot open file %s: %s\n", full_save_file, strerror(errno));
+			} else {
+				pvGet(data, SYNC);
+				pvGet(nord_data, SYNC);
+				for (k = 0; k < nord_data-1; k++) {
+					fprintf(general_path_save_file, "%d\n", data[k]);
+				}
+				fflush(general_path_save_file);
+			}			
+			num_export=0;
+			pvPut(num_export,SYNC);
+			fclose(general_path_save_file);
+		} state idle
+	}
+}
+
