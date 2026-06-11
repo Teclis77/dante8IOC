@@ -26,6 +26,6 @@ iocInit
 
 ## Start any sequence programs
 #seq sncxxx,"user=xlabsrv2"
-seq sncdet_fake,"user=dante8IOC,server=xlabsrv2,card=1,axis=1"
-seq sncdet_fake,"user=dante8IOC,server=xlabsrv2,card=1,axis=2"
-seq sncdet_fake,"user=dante8IOC,server=xlabsrv2,card=1,axis=3"
+seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=1"
+seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=2"
+seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=3"

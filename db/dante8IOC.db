@@ -17,19 +17,31 @@ record(ai, "$(DETECT)_$(card)_$(axis):type") {
 	field(VAL, "2")
 	field(PINI, "YES")
 }
-record(stringin, "$(DETECT):snl_status") {
-	field(DESC, "Query if SNL online")
+record(bo, "$(DETECT):reqsnl") {
+	field(DESC, "Request if SNL is online")
+	field(VAL, "1")
+	field(PINI, "YES")
+	field(FLNK, "$(DETECT):evalsnl")
+}
+record(stringin, "$(DETECT):evalsnl") {
+	field(DESC, "Evaluate if SNL online")
 	field(SCAN, "Passive")
 	field(DTYP, "Soft Channel")
 	field(INP, "$(ASYNPORT):dante:AsynIO.CNCT CP MS")
-	field(FLNK, "$(DETECT):reqsnl")
+	field(FLNK, "$(DETECT):snl_status")
 	field(PINI, "YES")
 }
-record(scalcout, "$(DETECT):reqsnl") {
+record(scalcout, "$(DETECT):snl_status") {
 	field(DESC, "Eval if SNL online")
 	field(SCAN, "Passive")
-	field(INAA, "$(DETECT):snl_status CP")
+	field(INAA, "$(DETECT):evalsnl CP")
 	field(CALC, "AA=='Connect'?1:0")
+}
+record(bo, "$(DETECT):reqname") {
+	field(DESC, "Request Model Name")
+	field(VAL, "1")
+	field(PINI, "YES")
+	field(FLNK, "$(DETECT):model_name")
 }
 record(stringin, "$(DETECT):model_name") {
 	field(DESC, "Model Device")
@@ -50,7 +62,7 @@ record(scalcout, "$(DETECT):reqmodel") {
 record(scalcout, "$(DETECT):model_calc") {
 	field(DESC, "Eval Connection Status")
         field(INPA, "$(DETECT):reqmodel CP") 
-	field(INPB, "$(DETECT):reqsnl CP") 
+	field(INPB, "$(DETECT):snl_status CP") 
 	field(CALC, "(A&&B)?'$(DETECT) Online':'$(DETECT) Offline'")
         field(OUT, "$(DETECT):model.VAL PP")
 	field(FLNK, "$(DETECT):model.PROC")
@@ -65,6 +77,14 @@ record(stringin, "$(DETECT)_$(card)_$(axis):busy") {
 	field(DESC, "Busy $(card)_$(axis) - (0=busy, 1=ready)")
 	field(SCAN, "Passive")
 	field(VAL, "1")
+	field(PINI, "YES")
+}
+#
+#       Path Save
+#
+record(stringout, $(DETECT):scan:filepath) {
+	field(DESC, "Output file path")
+	field(VAL, "temp/data")
 	field(PINI, "YES")
 }
 #
@@ -196,4 +216,21 @@ record(waveform, "$(DETECT)_$(card)_$(axis):data") {
 	field(SCAN, "Passive")
 	field(DTYP, "Soft Channel")
 	field(INP, "$(ASYNPORT):mca$(axis) CP MS")
+}
+record(stringout, "$(DETECT)_$(card)_$(axis):dataout") {
+        field(DESC, "Name of file to store")
+        field(PINI, "NO")
+	field(VAL, "test.dat")
+        field(FLNK, "$(DETECT)_$(card)_$(axis):set_status")
+}
+record(calcout, "$(DETECT)_$(card)_$(axis):set_status") {
+	field(CALC, "1")
+	field(OUT,  "$(DETECT)_$(card)_$(axis):status PP")
+	field(OOPT, "Every Time")
+	field(DOPT, "Use CALC")
+}
+record(ai, "$(DETECT)_$(card)_$(axis):status") {
+	field(DESC, "status save")
+	field(SCAN, "Passive")
+	field(PINI, "NO")
 }
