@@ -12,6 +12,7 @@
 cd "${TOP}"
 
 epicsEnvSet ("STREAM_PROTOCOL_PATH", "${TOP}/db")
+epicsEnvSet ("DETECTOR", "dante_1")
 
 ## Register all support components
 dbLoadDatabase "dbd/dante8IOC.dbd"
@@ -26,6 +27,9 @@ iocInit
 
 ## Start any sequence programs
 #seq sncxxx,"user=xlabsrv2"
-seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=1"
-seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=2"
-seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=3"
+#seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=1"
+seq sncdante8IOC,"user=${DETECTOR},server=xlabsrv2,card=1,axis=1"
+#seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=2"
+seq sncdante8IOC,"user=${DETECTOR},server=xlabsrv2,card=1,axis=2"
+#seq sncdante8IOC,"user=dante8IOC,server=xlabsrv2,card=1,axis=3"
+seq sncdante8IOC,"user=${DETECTOR},server=xlabsrv2,card=1,axis=3"

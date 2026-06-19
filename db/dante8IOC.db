@@ -103,7 +103,8 @@ record(stringin, "$(DETECT)_$(card)_$(axis):enable_status") {
 	field(DESC, "Status Board $(card) $(axis)")
 	field(SCAN, "Passive")
 	field(DTYP, "Soft Channel")
-	field(INP, "$(ASYNPORT):dante$(axis):EnableBoard CP MS")
+#	field(INP, "$(ASYNPORT):dante$(axis):EnableBoard CP MS")
+	field(INP, "$(ASYNPORT):dante$(axis):EnableBoard_RBV CP MS")
 }
 #
 #	Reset Routines
@@ -148,30 +149,24 @@ record(ao, "$(DETECT)_$(card)_$(axis):settime") {
 #
 record(bo, "$(DETECT)_$(card)_$(axis):reqready") {
 	field(DESC, "Req. ready $(card) $(axis)")
-	field(FLNK, "$(DETECT)_$(card)_$(axis):ori_ready")
+	field(FLNK, "$(DETECT)_$(card)_$(axis):ready_status")
 }
-record(ai, "$(DETECT)_$(card)_$(axis):term_ready") {
+record(stringin, "$(DETECT)_$(card)_$(axis):term_ready") {
 	field(DESC, "Terminator for Detector Status")
 	field(VAL, "$(ready)")
 	field(PINI, "YES")
 }
-record(ai, "$(DETECT)_$(card)_$(axis):real_time") {
+record(stringin, "$(DETECT)_$(card)_$(axis):ready_status") {
 	field(DESC, "Actual Time")
         field(DTYP, "Soft Channel")
-	field(INP, "$(ASYNPORT):dante$(axis):ElapsedRealTime CP MS")
-}
-record(scalcout, "$(DETECT)_$(card)_$(axis):ori_ready") {
-	field(DESC, "Is Ready?")
-	field(INPA, "$(DETECT)_$(card)_$(axis):real_time")
-	field(INPB, "$(DETECT)_$(card)_$(axis):gettime")
-	field(CALC, "abs(A-B)<0.1?1:0")
+	field(INP, "$(ASYNPORT):dante:AcquireBusy CP MS")
 	field(FLNK, "$(DETECT)_$(card)_$(axis):ready")
 }
 record(scalcout, "$(DETECT)_$(card)_$(axis):ready") {
 	field(DESC, "Is ready?")
-	field(INPA, "$(DETECT)_$(card)_$(axis):ori_ready")
-	field(INPB, "$(DETECT)_$(card)_$(axis):term_ready")
-	field(CALC, "A=B?1:0")
+	field(INAA, "$(DETECT)_$(card)_$(axis):ready_status")
+	field(INBB, "$(DETECT)_$(card)_$(axis):term_ready")
+	field(CALC, "AA=BB?1:0")
 }
 #
 #	Acquisition Routines
@@ -189,6 +184,15 @@ record(bo, "$(DETECT)_$(card)_$(axis):start") {
 	field(ZNAM, "0")
 	field(ONAM, "1")
 	field(VAL, "0")
+}
+record(bo, "$(DETECT)_$(card)_$(axis):stop") {
+        field(DESC, "Stop Acq. $(card) $(axis)")
+        field(SCAN, "Passive")
+        field(DTYP, "Soft Channel")
+        field(OUT, "$(ASYNPORT):mca$(axis)Stop PP")
+        field(ZNAM, "0")
+        field(ONAM, "1")
+        field(VAL, "0")
 }
 #
 #	Data Routines
@@ -223,7 +227,13 @@ record(stringout, "$(DETECT)_$(card)_$(axis):dataout") {
 	field(VAL, "test.dat")
         field(FLNK, "$(DETECT)_$(card)_$(axis):set_status")
 }
-record(calcout, "$(DETECT)_$(card)_$(axis):set_status") {
+#record(calcout, "$(DETECT)_$(card)_$(axis):set_status") {
+record(bo, "$(DETECT)_$(card)_$(axis):set_status") {
+	field(DESC, "Set status to 1")
+	field(FLNK, "$(DETECT)_$(card)_$(axis):set_status_calc")
+	field(PINI, "NO")
+}
+record(calcout, "$(DETECT)_$(card)_$(axis):set_status_calc") {
 	field(CALC, "1")
 	field(OUT,  "$(DETECT)_$(card)_$(axis):status PP")
 	field(OOPT, "Every Time")

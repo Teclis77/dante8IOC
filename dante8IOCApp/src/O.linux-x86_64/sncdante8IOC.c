@@ -33,7 +33,7 @@ static	int num_export;
 # line 48 "../sncdante8IOC.stt"
 static	int nord_data;
 # line 56 "../sncdante8IOC.stt"
-static	int data[100];
+static	int data[4096];
 # line 61 "../sncdante8IOC.stt"
 static	string temp_string;
 # line 62 "../sncdante8IOC.stt"
@@ -247,7 +247,7 @@ static seqChan seqg_chans[] = {
 	{"{user}_{card}_{axis}:dataout", (size_t)&name_file, "name_file", P_STRING, 1, 3, 0, 1, 0, 0},
 	{"{user}_{card}_{axis}:status", (size_t)&num_export, "num_export", P_INT, 1, 4, 0, 1, 0, 0},
 	{"{user}_{card}_{axis}:data.NORD", (size_t)&nord_data, "nord_data", P_INT, 1, 5, 0, 1, 0, 0},
-	{"{user}_{card}_{axis}:data", (size_t)&data, "data", P_INT, 100, 6, 0, 1, 0, 0},
+	{"{user}_{card}_{axis}:data", (size_t)&data, "data", P_INT, 4096, 6, 0, 1, 0, 0},
 };
 
 /* Event masks for state set "save_data" */

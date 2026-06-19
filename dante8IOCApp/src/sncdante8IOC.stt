@@ -53,7 +53,7 @@ monitor nord_data;
 // SONO ARRIVATO CHE DEFINISCO IL NUMERO DEI VALORI IN DATAOUT
 //
 
-int data[100];
+int data[4096];
 assign data to "{user}_{card}_{axis}:data";
 monitor data;
 //

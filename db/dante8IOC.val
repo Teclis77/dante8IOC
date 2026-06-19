@@ -10,7 +10,7 @@
 #
 file db/dante8IOC.db {
 	pattern { card, axis, ASYNPORT, DETECT, EGU, ready }
-		{ 1, 1 , "Dante", "dante_1", ch, 1 }
-		{ 1, 2 , "Dante", "dante_1", ch, 1 }
-		{ 1, 3 , "Dante", "dante_1", ch, 1 }
+		{ 1, 1 , "Dante", "dante_1", ch, "Done" }
+		{ 1, 2 , "Dante", "dante_1", ch, "Done" }
+		{ 1, 3 , "Dante", "dante_1", ch, "Done" }
 }
